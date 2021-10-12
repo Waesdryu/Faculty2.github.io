@@ -1,0 +1,213 @@
+
+<!-- saved from url=(0018)http://erinlu.top/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>浙大城市学院通行码</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="./main.css">
+    <script src="./jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="./jquery.qrcode.min.js"></script>
+    <script>
+      function changeName() {
+        let name = document.getElementById("nameInput").value;
+        document.getElementById("dude").innerTML = name + "的通行码";
+        // let stdType = document.getElementById("stuTypeInput").value;
+        // document.getElementById("studentType").innerHTML = stdType;
+        let idObject = document.getElementById("muteDiv");
+        if (idObject != null) idObject.parentNode.removeChild(idObject);
+      }
+    </script>
+
+    <script>
+      jQuery(function () {
+        var colour = "1E90FF";
+        var flag = "";
+        if (null == colour || "" == colour) {
+          colour = "CCCCCC";
+        }
+
+        var mzt = "";
+        var dateTime = "";
+        var array = getJkm();
+        if (array.length > 0) {
+          mzt = array[0].mzt;
+          dateTime = array[0].dateTime;
+        }
+        if (mzt != "green") {
+          colour = "CCCCCC";
+        }
+        if (mzt == "green") {
+          $("#hzjkm").append(
+            '<div  class="hz" style="color: #55b957">健康码为 绿码</div>'
+          );
+        }
+        if (mzt == "yellow") {
+          $("#hzjkm").append(
+            '<div  class="hz" style="color: #ee8232">健康码为 黄码</div>'
+          );
+        }
+        if (mzt == "red") {
+          $("#hzjkm").append(
+            '<div class="hz" style="color: #e8453b">健康码为 红码</div>'
+          );
+        }
+
+        if (mzt == "orange") {
+          $("#hzjkm").append(
+            '<div class="hz" style="color: #FFA500">健康码为 橙码</div>'
+          );
+        }
+        if (mzt == "") {
+          colour = "1E90FF";
+          /* $("#hzjkm").append(
+            '<div class="hz" style="color: #006bc7">绿码获取失败（请打开支付宝出示）</div>'
+          ); */
+        }
+        if (mzt == "" && flag == "Invalid") {
+          colour = "CCCCCC";
+        }
+        if (dateTime != "") {
+          $("#dateTime").append(
+            '<div class="time">同步时间：' + dateTime + "</div>"
+          );
+        }
+
+        jQuery("#output").qrcode({
+          render: "table",
+          width: 180,
+          height: 180,
+
+          text: "zpy002gtKP4uzN+v7CW8OvADDTF8q3bY",
+          render: "canvas", //也可以替换为table
+          foreground: "#" + colour,
+          background: "#FFF",
+        });
+      });
+
+      function getJkm() {
+        var datas = "";
+        $.ajax({
+          type: "GET",
+          url:
+            "/pass_code/jkm?account=21900000&cardNo=330111199912310004&identity=3",
+          async: false,
+          dataType: "json",
+          success: function (data) {
+            datas = data;
+          },
+        });
+        return datas;
+      }
+
+      if (true) {
+        //获取系统时间
+        function showTime() {
+          nowtime = new Date();
+          year = nowtime.getFullYear(); //年
+          month = nowtime.getMonth() + 1; //月
+          day = nowtime.getDate(); //日
+          hour = nowtime.getHours(); //时
+          minutes = nowtime.getMinutes(); //分
+          seconds = nowtime.getSeconds(); //秒
+          //文字增加空格
+          document.getElementById("day_tiemr").style = "white-space:pre;";
+          //显示时间
+          document.getElementById("day_tiemr").innerText =
+            p(month) +
+            "月" +
+            p(day) +
+            "日 ";
+            document.getElementById("min_tiemr").innerText =
+            p(hour) +
+            ":" +
+            p(minutes) +
+            ":" +
+            p(seconds);
+        }
+
+        setInterval("showTime()", 1000);
+        //月日时分秒小于10补0
+        function p(s) {
+          return s < 10 ? "0" + s : s;
+        }
+      }
+    </script>
+  </head>
+
+  <body class="blue-bg" style="">
+    <div id="muteDiv">
+      <label for="name">Name:</label>
+      <input name="name" type="text" id="nameInput">
+      <!-- <select name="stuTypeInput" id="stuTypeInput">
+        <option value="本科生">本科生</option>
+      </select> -->
+      <input type="button" onclick="changeName()" value="Input">
+    </div>
+    <div class="banner">
+    </div>
+    <div class="content-box">
+      <div class="top-title">
+        <h3 id="dude">逮虾户的通行码</h3>
+
+        <span class="bgr" id="studentType">教职工</span>
+      </div>
+
+      <strong><div class="time2" id="day_tiemr" style="white-space: pre;">06月03日</div></strong>
+      <strong><div class="time3" id="min_tiemr" style="white-space: pre;">19:58:24</div></strong>
+
+      <div class="qr">
+        <div id="output" style="margin-top: 10px; margin-bottom: 10px;">
+        </div>
+      </div>
+
+      <div class="time" id="expirationTime">有效期：2020-07-01 - 2020-11-30</div>
+
+      <div id="hzjkm">
+        <div class="hz" style="color: #55b957;">杭州市健康码为 绿码</div>
+      </div>
+
+      <div id="dateTime">
+        <div class="time" id="syncTime">同步时间：2021-06-03</div>
+      </div>
+
+      <p class="tip" style="margin-top: 10px;">
+        凭此码可在浙大城市学院内通行<br>请主动出示，配合检查
+      </p>
+
+    </div>
+    <script>
+      function synTime() {
+        nowtime = new Date();
+        year = nowtime.getFullYear(); //年
+        month = nowtime.getMonth() + 1; //月
+        day = nowtime.getDate(); //日
+        if (nowtime.getHours() > 2) {
+          hour = nowtime.getHours() - 1;
+        } else {
+          hour = nowtime.getHours();
+        }
+        minutes = parseInt(nowtime.getMinutes() / 2); //分
+        seconds = parseInt(nowtime.getSeconds() / 3); //秒
+        document.getElementById("syncTime").innerText =
+          "同步时间：" +
+          p(year) +
+          "-" +
+          p(month) +
+          "-" +
+          p(day);
+        document.getElementById("expirationTime").innerText = 
+          "有效期: " +
+          p(year) +
+          "-" +
+          p(month) +
+          "-01 - " +
+          p(year) +
+          "-" +
+          p(month + 1) +
+          "-01";
+      }
+      synTime();
+    </script>
+  
+
+</body></html>
